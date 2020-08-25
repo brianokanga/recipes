@@ -1,0 +1,24 @@
+{
+	"name": "recipes",
+	"version": "1.0.0",
+	"description": "recipes project",
+	"main": "index.js",
+	"scripts": {
+		"dev": "webpack --mode development",
+		"build": "webpack --mode production"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/brianokanga/recipes.git"
+	},
+	"author": "brianokanga",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/brianokanga/recipes/issues"
+	},
+	"homepage": "https://github.com/brianokanga/recipes#readme",
+	"devDependencies": {
+		"webpack": "^4.44.1",
+		"webpack-cli": "^3.3.12"
+	}
+}
