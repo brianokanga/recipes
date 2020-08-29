@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+//async method definition
 async function getResults(query) {
 	const proxy = 'https://cors-anywhere.herokuapp.com/';
 	const key = '';
@@ -15,4 +16,4 @@ async function getResults(query) {
 	}
 }
 
-getResults('pizza');
+getResults('pizza'); //method
