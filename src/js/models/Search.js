@@ -13,8 +13,8 @@ export default class Search {
 			const res = await axios(
 				`${proxy}https://recipesapi.herokuapp.com/api/search?key=${key}&q=${this.query}`
 			);
-			this.recipes = res.data.recipes;
-			console.log(recipes);
+			this.results = res.data.recipes;
+			console.log(this.results);
 		} catch (error) {
 			alert(error);
 		}
