@@ -8,6 +8,7 @@ export const clearInput = () => {
 
 export const clearResults = () => {
 	elements.searchResList.innerHTML = '';
+	elements.searchResPages.innerHTML = '';
 };
 
 //private function(simple algorithm)
@@ -51,7 +52,53 @@ const renderRecipe = recipe => {
 };
 
 //the function receive all recipes for the user input request
-export const renderResults = recipes => {
-	// recipes.foreach(cur => renderRecipe(cur));
-	recipes.forEach(renderRecipe); //simple way autmatically passes current el
+// PAGINATION PROCESS
+//1. change the renderResults function
+//2. Renderbutton to the UI(private func)
+//3. Attach event handlers to the buttions
+
+//types: 'previous' or 'next'
+const createButton = (page, type) => `
+	<button class="btn-inline results__btn--${type}" data-goto=${
+	type === 'prev' ? page - 1 : page + 1
+}>
+	<span>Page ${type === 'prev' ? page - 1 : page + 1} </span>
+		<svg class="search__icon">
+			<use href="img/icons.svg#icon-triangle-${
+				type === 'prev' ? 'left' : 'right'
+			}"></use>
+		</svg>
+	</button>
+`;
+
+const renderButtons = (page, numResults, resPerPage) => {
+	const pages = Math.ceil(numResults / resPerPage); //Number of pages
+
+	let button;
+	if (page === 1 && pages > 1) {
+		//1. Onlybutton to go to the next page
+		button = createButton(page, 'next');
+	} else if (page < pages) {
+		//2. Both buttons
+		button = `
+		${createButton(page, 'prev')}
+		${createButton(page, 'next')}
+		`;
+	} else if (page === pages && pages > 1) {
+		//3. Only button to go to the previous
+		button = createButton(page, 'prev');
+	}
+
+	elements.searchResPages.insertAdjacentHTML('afterbegin', button);
+};
+
+export const renderResults = (recipes, page = 1, resPerPage = 10) => {
+	//1. render results of current page
+	const start = (page - 1) * resPerPage;
+	const end = page * resPerPage;
+
+	recipes.slice(start, end).forEach(renderRecipe);
+
+	//2 render pagination buttons
+	renderButtons(page, recipes.length, resPerPage);
 };

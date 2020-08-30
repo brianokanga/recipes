@@ -33,7 +33,20 @@ const controlSearch = async () => {
 	}
 };
 
+// EVENT LISTENERS
 elements.searchForm.addEventListener('submit', e => {
 	e.preventDefault();
 	controlSearch();
+});
+
+// event delegations since the are not availabe at load
+// So we attach the event to the parent element(available at load)
+elements.searchResPages.addEventListener('click', e => {
+	const btn = e.target.closest('.btn-inline');
+	if (btn) {
+		const goToPage = parseInt(btn.dataset.goto, 10); //returns a string
+		searchView.clearResults();
+		searchView.renderResults(state.search.result, goToPage);
+		console.log(goToPage);
+	}
 });
