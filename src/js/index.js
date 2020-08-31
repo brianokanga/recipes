@@ -1,4 +1,5 @@
 import Search from './models/Search';
+import Recipe from './models/Recipe';
 import * as searchView from './views/Searchview';
 import { elements, renderLoader, clearLoader } from './views/base';
 
@@ -8,8 +9,11 @@ import { elements, renderLoader, clearLoader } from './views/base';
 3. Shopping list object
 4. Liked recipes
 */
+
+// GLOBAL STATE
 const state = {};
 
+// SEARCH CONTROLLER
 //async function since we wait dor search results to be returned to render to UI
 const controlSearch = async () => {
 	//1. Get query from the view
@@ -50,3 +54,8 @@ elements.searchResPages.addEventListener('click', e => {
 		console.log(goToPage);
 	}
 });
+
+// RECIPE CONTROLLER
+const r = new Recipe(47746);
+r.getRecipe();
+console.log(r);

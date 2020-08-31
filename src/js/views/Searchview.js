@@ -102,3 +102,5 @@ export const renderResults = (recipes, page = 1, resPerPage = 10) => {
 	//2 render pagination buttons
 	renderButtons(page, recipes.length, resPerPage);
 };
+
+// how to show last page?
