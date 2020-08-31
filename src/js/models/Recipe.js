@@ -35,7 +35,7 @@ export default class Recipe {
 	}
 
 	// Servings
-	calServing() {
+	calcServings() {
 		this.servings = 4;
 	}
 }

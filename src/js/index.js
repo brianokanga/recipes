@@ -28,12 +28,17 @@ const controlSearch = async () => {
 		searchView.clearResults();
 		renderLoader(elements.searchRes); //spinner
 
-		//4. Search for recipe(returns a promise stored in the globla state)
-		await state.search.getResults(); //result from API call
+		try {
+			//4. Search for recipe(returns a promise stored in the globla state)
+			await state.search.getResults(); //result from API call
 
-		//5. Render result to the UI
-		clearLoader();
-		searchView.renderResults(state.search.result);
+			//5. Render result to the UI
+			clearLoader();
+			searchView.renderResults(state.search.result);
+		} catch (err) {
+			alert('Error processing search');
+			clearLoader();
+		}
 	}
 };
 
@@ -56,6 +61,38 @@ elements.searchResPages.addEventListener('click', e => {
 });
 
 // RECIPE CONTROLLER
-const r = new Recipe(47746);
-r.getRecipe();
-console.log(r);
+// the hash is a string hence we can use string methods on it
+const controlRecipe = async () => {
+	//1. Get id frim url
+	const id = window.location.hash.replace('#', '');
+	console.log(id);
+
+	if (id) {
+		//2. Prepare UI for changes
+		//3. Create a new recipe object
+		state.recipe = new Recipe(id);
+
+		try {
+			//4. Get recipe Data(returns a promise)
+			await state.recipe.getRecipe();
+
+			//5. Calculate servings and time
+			state.recipe.calcTime();
+			state.recipe.calcServings();
+
+			//6. Render Recipe
+			console.log(state.recipe);
+		} catch (err) {
+			alert('Error processing recipe');
+		}
+	}
+};
+
+// add event listemer to the global object(window)
+// window.addEventListener('hashchange', controlRecipe);
+// window.addEventListener('load', controlRecipe);
+
+// add same event listemer to multiple events
+['hashchange', 'load'].forEach(event =>
+	window.addEventListener(event, controlRecipe)
+);
