@@ -17,6 +17,8 @@ const state = {};
 //async function since we wait dor search results to be returned to render to UI
 const controlSearch = async () => {
 	//1. Get query from the view
+	// FOR TESTING
+	// const query = 'pizza';
 	const query = searchView.getInput();
 
 	if (query) {
@@ -48,6 +50,12 @@ elements.searchForm.addEventListener('submit', e => {
 	controlSearch();
 });
 
+// FOR TESTING
+// window.addEventListener('load', e => {
+// 	e.preventDefault();
+// 	controlSearch();
+// });
+
 // event delegations since the are not availabe at load
 // So we attach the event to the parent element(available at load)
 elements.searchResPages.addEventListener('click', e => {
@@ -70,11 +78,15 @@ const controlRecipe = async () => {
 	if (id) {
 		//2. Prepare UI for changes
 		//3. Create a new recipe object
+		// FOR TESTING
+		// window.r = state.recipe;
+		// console.log(window.r);
 		state.recipe = new Recipe(id);
 
 		try {
-			//4. Get recipe Data(returns a promise)
+			//4. Get recipe Data and parse ingredients(returns a promise)
 			await state.recipe.getRecipe();
+			state.recipe.parseIngredients();
 
 			//5. Calculate servings and time
 			state.recipe.calcTime();
