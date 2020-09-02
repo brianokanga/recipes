@@ -62,6 +62,7 @@ export default class Recipe {
 			'cup',
 			'pound',
 		];
+		const units = [...unitsShort, 'kg', 'g'];
 
 		// Create new array with new ingredients based on the old ones
 		// array map creates a new array based o what is provided
@@ -77,7 +78,7 @@ export default class Recipe {
 
 			//3. Parse ingredients into count, unit and ingredients
 			const arrIng = ingredient.split(' ');
-			const unitIndex = arrIng.findIndex(cur2 => unitsShort.includes(cur2)); // returns index and elememt
+			const unitIndex = arrIng.findIndex(cur2 => units.includes(cur2)); // returns index and elememt
 
 			// check if there is a unit
 			let objIng;

@@ -1,6 +1,7 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
-import * as searchView from './views/Searchview';
+import * as searchView from './views/searchview';
+import * as recipeView from './views/recipeView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 /*Global state
@@ -38,7 +39,7 @@ const controlSearch = async () => {
 			clearLoader();
 			searchView.renderResults(state.search.result);
 		} catch (err) {
-			alert('Error processing search');
+			alert(err);
 			clearLoader();
 		}
 	}
@@ -71,16 +72,18 @@ elements.searchResPages.addEventListener('click', e => {
 // RECIPE CONTROLLER
 // the hash is a string hence we can use string methods on it
 const controlRecipe = async () => {
-	//1. Get id frim url
+	//1. Get id from url
 	const id = window.location.hash.replace('#', '');
-	console.log(id);
+	console.log(id); //for testing
 
 	if (id) {
 		//2. Prepare UI for changes
+		recipeView.clearRecipe();
+		renderLoader(elements.recipe); //parent element to show load where
+
 		//3. Create a new recipe object
-		// FOR TESTING
-		// window.r = state.recipe;
-		// console.log(window.r);
+		// window.r = state.recipe; // FOR TESTING
+		// console.log(window.r); // FOR TESTING
 		state.recipe = new Recipe(id);
 
 		try {
@@ -93,9 +96,12 @@ const controlRecipe = async () => {
 			state.recipe.calcServings();
 
 			//6. Render Recipe
+			clearLoader();
 			console.log(state.recipe);
+			recipeView.renderRecipe(state.recipe);
 		} catch (err) {
-			alert('Error processing recipe');
+			console.log(err);
+			alert('Error processing requested recipe');
 		}
 	}
 };
