@@ -1,6 +1,7 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
-import * as searchView from './views/Searchview';
+import * as searchView from './views/searchview';
+import * as recipeView from './views/recipeView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 /*Global state
@@ -17,6 +18,8 @@ const state = {};
 //async function since we wait dor search results to be returned to render to UI
 const controlSearch = async () => {
 	//1. Get query from the view
+	// FOR TESTING
+	// const query = 'pizza';
 	const query = searchView.getInput();
 
 	if (query) {
@@ -28,12 +31,17 @@ const controlSearch = async () => {
 		searchView.clearResults();
 		renderLoader(elements.searchRes); //spinner
 
-		//4. Search for recipe(returns a promise stored in the globla state)
-		await state.search.getResults(); //result from API call
+		try {
+			//4. Search for recipe(returns a promise stored in the globla state)
+			await state.search.getResults(); //result from API call
 
-		//5. Render result to the UI
-		clearLoader();
-		searchView.renderResults(state.search.result);
+			//5. Render result to the UI
+			clearLoader();
+			searchView.renderResults(state.search.result);
+		} catch (err) {
+			alert(err);
+			clearLoader();
+		}
 	}
 };
 
@@ -42,6 +50,12 @@ elements.searchForm.addEventListener('submit', e => {
 	e.preventDefault();
 	controlSearch();
 });
+
+// FOR TESTING
+// window.addEventListener('load', e => {
+// 	e.preventDefault();
+// 	controlSearch();
+// });
 
 // event delegations since the are not availabe at load
 // So we attach the event to the parent element(available at load)
@@ -56,6 +70,47 @@ elements.searchResPages.addEventListener('click', e => {
 });
 
 // RECIPE CONTROLLER
-const r = new Recipe(47746);
-r.getRecipe();
-console.log(r);
+// the hash is a string hence we can use string methods on it
+const controlRecipe = async () => {
+	//1. Get id from url
+	const id = window.location.hash.replace('#', '');
+	console.log(id); //for testing
+
+	if (id) {
+		//2. Prepare UI for changes
+		recipeView.clearRecipe();
+		renderLoader(elements.recipe); //parent element to show load where
+
+		//3. Create a new recipe object
+		// window.r = state.recipe; // FOR TESTING
+		// console.log(window.r); // FOR TESTING
+		state.recipe = new Recipe(id);
+
+		try {
+			//4. Get recipe Data and parse ingredients(returns a promise)
+			await state.recipe.getRecipe();
+			state.recipe.parseIngredients();
+
+			//5. Calculate servings and time
+			state.recipe.calcTime();
+			state.recipe.calcServings();
+
+			//6. Render Recipe
+			clearLoader();
+			console.log(state.recipe);
+			recipeView.renderRecipe(state.recipe);
+		} catch (err) {
+			console.log(err);
+			alert('Error processing requested recipe');
+		}
+	}
+};
+
+// add event listemer to the global object(window)
+// window.addEventListener('hashchange', controlRecipe);
+// window.addEventListener('load', controlRecipe);
+
+// add same event listemer to multiple events
+['hashchange', 'load'].forEach(event =>
+	window.addEventListener(event, controlRecipe)
+);
